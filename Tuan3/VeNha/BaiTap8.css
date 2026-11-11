@@ -1,0 +1,28 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Georgia, 'Times New Roman', serif; }
+#root { max-width: 1024px; margin: 30px auto; padding: 0 16px; }
+#site-header {
+  margin: 0 0 30px;
+  padding: 20px 15px;
+  color: white;
+  text-align: center;
+  font-size: 30px;
+  text-shadow: 2px 2px 2px #555;
+  background: #cecece url('images/bat-logo.png') no-repeat calc(50% - 145px) center;
+  background-size: 88px auto;
+}
+.superheroes { display: flex; gap: 4px; padding: 0; margin: 0; list-style: none; }
+.superheroes li { position: relative; flex: 1 1 0; min-width: 0; transition: flex-grow .25s ease; }
+.superheroes li:hover, .superheroes li:focus-within { flex-grow: 1.45; }
+.superheroes img { display: block; width: 100%; max-width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border: 1px solid #888; border-radius: 12px; }
+.hero-header { position: absolute; z-index: 1; top: 8px; left: 0; width: 100%; color: white; text-align: center; text-shadow: 1px 1px 3px #111; }
+.superheroes a { display: block; width: 100%; margin-top: 4px; padding: 8px; color: white; text-align: center; text-decoration: none; background: #686868; opacity: 0; pointer-events: none; }
+.superheroes li:hover a, .superheroes li:focus-within a { opacity: 1; pointer-events: auto; text-decoration: underline; }
+.superheroes a:focus-visible { outline: 3px solid #f1cc38; outline-offset: 2px; }
+@media (max-width: 700px) {
+  #site-header { background-position: 24px center; }
+  .superheroes { flex-wrap: wrap; gap: 10px; }
+  .superheroes li { flex: 1 1 30%; }
+  .superheroes li:hover, .superheroes li:focus-within { flex-grow: 1; }
+  .superheroes a { opacity: 1; pointer-events: auto; }
+}

@@ -1,0 +1,19 @@
+body { margin: 40px; font-family: Arial, sans-serif; }
+h1 { font-size: 22px; }
+.menu { margin: 28px 0 0; padding: 0; list-style: none; }
+.menu li { display: inline-block; margin-right: 6px; }
+.menu a {
+  display: inline-block;
+  width: 160px;
+  padding: 6px 12px;
+  background-color: #00eeee;
+  color: #0000ee;
+  font-family: "Times New Roman", serif;
+  font-size: 30px;
+  text-align: center;
+  text-decoration: underline;
+}
+.menu a:focus-visible { outline: 3px solid #333; outline-offset: 3px; }
+@media (max-width: 720px) {
+  .menu li { margin: 0 6px 8px 0; }
+}

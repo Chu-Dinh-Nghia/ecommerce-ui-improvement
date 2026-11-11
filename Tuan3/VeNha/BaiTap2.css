@@ -1,0 +1,75 @@
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  color: #263238;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  background-color: #f3f7f7;
+  background-image: url("images/bit-logo-reference.png");
+  background-size: 30px auto;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+
+.page { width: min(920px, calc(100% - 32px)); margin: 32px auto 64px; }
+.intro, .exercise { padding: 24px 30px; background: rgba(255, 255, 255, .96); border: 1px solid #d8e3e4; border-radius: 12px; }
+.intro { margin-bottom: 18px; }
+.intro h1 { margin: 0 0 6px; font-size: clamp(26px, 4vw, 36px); }
+.intro p { margin: 0; }
+.eyebrow { color: #00666d; font-weight: bold; letter-spacing: .04em; text-transform: uppercase; font-size: 12px; }
+.exercise { margin-top: 18px; }
+.exercise h2 { margin: 0 0 16px; font-size: 20px; }
+.exercise h3 { margin: 0 0 10px; font-size: 15px; }
+
+.ueh-text {
+  margin: 0;
+  color: blue;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.faculty-text {
+  margin: 0;
+  padding: 14px;
+  color: rgba(255, 0, 0, .5);
+  text-align: right;
+  font-size: 15px;
+  font-style: italic;
+  background-color: #d3d3d3;
+  border: 3px dotted yellow;
+  border-radius: 12px;
+}
+
+.shadow-preview { padding: 18px 22px; background: #d9edb4; border-radius: 6px; }
+.bit-text {
+  margin: 0;
+  color: #a52322;
+  font-size: clamp(38px, 8vw, 58px);
+  font-weight: 800;
+  letter-spacing: -.04em;
+  text-shadow: 2px 2px 0 #d4f333, 4px 4px 2px #769900, 8px 8px 13px #7b2e18;
+}
+
+.background-preview { height: 110px; border: 1px solid #bfd2d1; border-radius: 6px; background: transparent; }
+
+.source-text { margin: 0 0 18px; }
+.overflow-examples { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.example { min-width: 0; padding: 16px; background: #f6f9f9; border: 1px solid #dce6e7; border-radius: 8px; }
+.example:last-child { grid-column: 1 / -1; }
+.example p { margin-top: 0; }
+.clip-box { width: 100px; height: 50px; overflow: hidden; background: #fff; border: 1px solid #a7babb; }
+.ellipsis-box { width: 220px; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; background: #fff; border: 1px solid #a7babb; }
+.nowrap-frame { max-width: 100%; overflow-x: auto; background: #fff; border: 1px solid #a7babb; }
+.nowrap-box { margin: 0; white-space: nowrap; }
+.hint { margin: 8px 0 0 !important; color: #4d676b; font-size: 13px; }
+
+@media (max-width: 600px) {
+  .intro, .exercise { padding: 20px; }
+  .overflow-examples { grid-template-columns: 1fr; }
+  .example:last-child { grid-column: auto; }
+}

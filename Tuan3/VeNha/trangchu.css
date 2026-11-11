@@ -1,0 +1,22 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #f3f7f8; color: #21313a; font: 16px/1.5 Arial, Helvetica, sans-serif; }
+.shell { width: min(1020px, calc(100% - 32px)); margin: 36px auto 60px; }
+.student { display: flex; align-items: center; gap: 24px; padding: 28px; background: #fff; border: 1px solid #d9e7e9; border-radius: 12px; }
+.avatar { width: 112px; height: 112px; flex: 0 0 auto; border-radius: 50%; }
+.student h1 { margin: 0 0 4px; font-size: clamp(26px, 4vw, 36px); }
+.student p { margin: 0 0 8px; }
+.eyebrow { color: #006971; font-size: 12px; font-weight: bold; letter-spacing: .05em; text-transform: uppercase; }
+h2 { margin: 30px 0 18px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.card { padding: 20px; background: #fff; border: 1px solid #d9e7e9; border-radius: 10px; }
+.card h2, .card h3 { margin: 0 0 8px; font-size: 19px; }
+.card p { margin: 0 0 14px; }
+a { color: #006971; }
+a:hover, a:focus-visible { color: #00454b; }
+a:focus-visible { outline: 3px solid #f5b841; outline-offset: 3px; }
+.back { display: inline-block; margin-bottom: 16px; }
+.report { margin-top: 24px; padding: 18px 20px; background: #e3f3f3; border-radius: 8px; }
+.icon-cards .card { text-align: center; }
+.icon-cards i { color: #007d85; font-size: 38px; }
+.note { color: #50656b; font-size: 14px; }
+@media (max-width: 620px) { .student { display: block; } .avatar { margin-bottom: 14px; } }
