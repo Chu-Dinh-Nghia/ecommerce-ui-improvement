@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anh hùng đấu Rồng</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0e1525;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+main {
+  max-width: 1050px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #ffcc80;
+}
+
+.description {
+  text-align: center;
+  color: #b6c5de;
+}
+
+.settings, .controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #cad6eb;
+}
+
+input, select, button {
+  padding: 12px;
+  border: 1px solid #52617c;
+  border-radius: 8px;
+  background: #24334d;
+  color: white;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover:enabled {
+  border-color: #ffcc80;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+#attackButton {
+  background: #b45c25;
+}
+
+#stats {
+  text-align: center;
+  line-height: 1.7;
+  color: #b9d9ff;
+}
+
+#arena {
+  height: 460px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #52617c;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 50% 40%, #455571, transparent 45%),
+    linear-gradient(#172239 70%, #493b35);
+}
+
+.healthPanel {
+  position: absolute;
+  top: 22px;
+  width: 38%;
+  z-index: 3;
+}
+
+.heroPanel {
+  left: 20px;
+}
+
+.dragonPanel {
+  right: 20px;
+  text-align: right;
+}
+
+.bar {
+  height: 18px;
+  margin: 10px 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #111827;
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+  transition: width 0.4s;
+}
+
+#heroBar {
+  background: linear-gradient(90deg, #21a886, #80f5d2);
+}
+
+#dragonBar {
+  background: linear-gradient(90deg, #ca403b, #ffb35c);
+}
+
+.fighter {
+  position: absolute;
+  bottom: 45px;
+}
+
+#hero {
+  left: 10%;
+  font-size: clamp(95px, 16vw, 175px);
+  filter: drop-shadow(0 0 16px #5acfff);
+}
+
+#dragon {
+  right: 3%;
+  width: 47%;
+}
+
+#dragonImage {
+  display: block;
+  width: 100%;
+  filter: drop-shadow(0 0 16px #ff732744);
+}
+
+#imageWarning {
+  color: #ffd18c;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.attacking {
+  animation: attack 0.4s;
+}
+
+.hurt {
+  animation: hurt 0.5s;
+}
+
+.dodging {
+  animation: dodge 0.5s;
+}
+
+.dead {
+  opacity: 0.3;
+  filter: grayscale(1) !important;
+}
+
+.projectile {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  z-index: 5;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 25px 10px currentColor;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.damage {
+  position: absolute;
+  z-index: 6;
+  color: #ffe39a;
+  font-size: 24px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-shadow: 0 2px 5px black;
+  animation: floatUp 1s forwards;
+  pointer-events: none;
+}
+
+#result {
+  min-height: 30px;
+  text-align: center;
+  color: #ffd18c;
+}
+
+#log {
+  height: 180px;
+  overflow: auto;
+  border-radius: 12px;
+  background: #1a2840;
+  padding: 18px 32px;
+}
+
+#log li {
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+footer {
+  padding: 15px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+@keyframes attack {
+  50% {
+    transform: translateY(-18px) scale(1.08);
+  }
+}
+
+@keyframes hurt {
+  20%, 60% {
+    filter: brightness(2) drop-shadow(0 0 20px red);
+    transform: translateX(10px);
+  }
+
+  40%, 80% {
+    transform: translateX(-10px);
+  }
+}
+
+@keyframes dodge {
+  50% {
+    transform: translateY(-45px);
+    opacity: 0.4;
+  }
+}
+
+@keyframes floatUp {
+  to {
+    transform: translateY(-90px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  main {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  #arena {
+    height: 360px;
+  }
+
+  .healthPanel {
+    width: 40%;
+    font-size: 12px;
+  }
+
+  #dragon {
+    bottom: 55px;
+    width: 49%;
+  }
+
+  #hero {
+    left: 5%;
+  }
+}
+</style>
+</head>
+
+<body>
+<main>
+  <h1>⚔ ANH HÙNG ĐẤU RỒNG</h1>
+  <p class="description">
+    Chọn nhân vật và thử sức với Rồng Già!
+  </p>
+
+  <div class="settings">
+    <label>
+      Tên anh hùng
+      <input id="playerName" value="Chu Đình Nghĩa" maxlength="40">
+    </label>
+
+    <label>
+      Phân cấp
+      <select id="role">
+        <option value="a">Chiến Binh</option>
+        <option value="b">Sát Thủ</option>
+        <option value="c">Thợ Săn</option>
+      </select>
+    </label>
+
+    <label>
+      Chế độ
+      <select id="mode">
+        <option value="practice">Luyện tập — dễ hơn</option>
+        <option value="original">Chỉ số bài gốc — khó</option>
+      </select>
+    </label>
+  </div>
+
+  <p id="stats"></p>
+
+  <section id="arena" aria-label="Đấu trường">
+    <div class="healthPanel heroPanel">
+      <strong id="heroName"></strong>
+      <div class="bar">
+        <div id="heroBar" class="fill"></div>
+      </div>
+      <span id="heroHP"></span>
+    </div>
+
+    <div class="healthPanel dragonPanel">
+      <strong>🐉 Rồng Già</strong>
+      <div class="bar">
+        <div id="dragonBar" class="fill"></div>
+      </div>
+      <span id="dragonHP"></span>
+    </div>
+
+    <div id="hero" class="fighter"
+         role="img" aria-label="Anh hùng pháp sư">🧙‍♂️</div>
+
+    <div id="dragon" class="fighter">
+      <!-- Ảnh tải từ cùng thư mục với index.html -->
+      <img id="dragonImage" src="./rong.png" alt="Rồng đỏ">
+      <p id="imageWarning" hidden>
+        Chưa tải được ảnh. Kiểm tra tệp rong.png trong thư mục Tuan4.
+      </p>
+    </div>
+  </section>
+
+  <div class="controls">
+    <button id="attackButton">⚔ Tấn công</button>
+    <button id="autoButton">▶ Tự động</button>
+    <button id="resetButton">↻ Chơi lại</button>
+  </div>
+
+  <h2 id="result" role="status"></h2>
+
+  <h3>📜 Nhật ký chiến đấu</h3>
+  <ol id="log" aria-live="polite"></ol>
+
+  <footer>
+    Chu Đình Nghĩa — MSSV: 31241026950 — Bài tập JavaScript
+  </footer>
+</main>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+let level, xp, strength, agility, intel;
+let health, maxHealth, dragonHealth, dragonStr;
+
+const dragonMaxHealth = 600;
+const dragonAgi = 15;
+const dragonInt = 80;
+
+let busy = false;
+let auto = false;
+let gameContinue = true;
+let round = 0;
+
+function addLog(message) {
+  const li = document.createElement("li");
+  li.textContent = message;
+  $("log").prepend(li);
+
+  // Giới hạn nhật ký để trang không bị quá dài.
+  while ($("log").children.length > 60) {
+    $("log").lastChild.remove();
+  }
+}
+
+function updateUI() {
+  $("heroHP").textContent = `${health} / ${maxHealth} HP`;
+  $("dragonHP").textContent =
+    `${dragonHealth} / ${dragonMaxHealth} HP`;
+
+  $("heroBar").style.width =
+    health / maxHealth * 100 + "%";
+
+  $("dragonBar").style.width =
+    dragonHealth / dragonMaxHealth * 100 + "%";
+
+  $("stats").textContent =
+    `Cấp ${level} | XP ${xp} | STR ${strength}` +
+    ` | AGI ${agility} | INT ${intel}`;
+
+  $("attackButton").disabled =
+    busy || auto || !gameContinue;
+
+  $("resetButton").disabled = busy;
+  $("autoButton").disabled = !gameContinue;
+
+  $("autoButton").textContent =
+    auto ? "Ⅱ Dừng sau lượt này" : "▶ Tự động";
+
+  for (const id of ["playerName", "role", "mode"]) {
+    $(id).disabled = busy || auto;
+  }
+}
+
+function resetGame() {
+  auto = false;
+  gameContinue = true;
+  round = 0;
+
+  // Công thức chỉ số lấy từ code gốc của bạn.
+  level = 2;
+  xp = 150 * (level - 1) + 200;
+
+  const skillpoints = 5 + xp / 10;
+
+  strength = 0.6 * skillpoints + 0.1 * xp;
+  agility = 0.2 * skillpoints + 0.2 * xp;
+  intel = 0.2 * skillpoints + 10 * level;
+
+  level = 3;
+  xp += 200;
+
+  const name =
+    $("playerName").value.trim() || "Chu Đình Nghĩa";
+
+  $("heroName").textContent = name;
+
+  // Giữ cách thưởng/phạt INT trong bài ban đầu.
+  intel += name === "Chu Đình Nghĩa" ? 5 : -5;
+
+  switch ($("role").value) {
+    case "a":
+      strength += 15;
+      agility -= 10;
+      intel -= 5;
+      break;
+
+    case "b":
+      strength -= 15;
+      agility += 10;
+      intel += 5;
+      break;
+
+    case "c":
+      strength -= 15;
+      intel += 15;
+      break;
+  }
+
+  level = 4;
+  xp += 700;
+  level = 5;
+
+  const practice = $("mode").value === "practice";
+
+  // Luyện tập được tăng máu và giảm sát thương rồng.
+  maxHealth = practice ? 420 : level + 100;
+  dragonStr = practice ? 28 : 100;
+
+  health = maxHealth;
+  dragonHealth = dragonMaxHealth;
+
+  $("hero").className = "fighter";
+  $("dragon").className = "fighter";
+  $("result").textContent = "";
+  $("log").replaceChildren();
+
+  document.querySelectorAll(".damage, .projectile")
+    .forEach(element => element.remove());
+
+  addLog("Trận đấu bắt đầu! Nhấn Tấn công hoặc Tự động.");
+  updateUI();
+}
+
+// Vị trí tâm nhân vật, tính tương đối trong đấu trường.
+function getPosition(id) {
+  const arena = $("arena").getBoundingClientRect();
+  const character = $(id).getBoundingClientRect();
+
+  return {
+    x: character.left - arena.left + character.width / 2,
+    y: character.top - arena.top + character.height / 2
+  };
+}
+
+async function attackEffect(attacker, target, hit, damage, critical) {
+  $(attacker).classList.add("attacking");
+  await wait(200);
+
+  const from = getPosition(attacker);
+  const to = getPosition(target);
+
+  const projectile = document.createElement("div");
+  projectile.className = "projectile";
+  projectile.style.color =
+    attacker === "hero" ? "#65dbff" : "#ff7028";
+
+  $("arena").append(projectile);
+
+  // Anh hùng bắn phép xanh; rồng phun hỏa cầu cam.
+  const animation = projectile.animate([
+    {
+      left: from.x + "px",
+      top: from.y + "px"
+    },
+    {
+      left: to.x + "px",
+      top: to.y + "px"
+    }
+  ], {
+    duration: 450,
+    easing: "ease-in",
+    fill: "forwards"
+  });
+
+  await animation.finished;
+
+  projectile.remove();
+  $(attacker).classList.remove("attacking");
+  $(target).classList.add(hit ? "hurt" : "dodging");
+
+  const damageText = document.createElement("div");
+  damageText.className = "damage";
+  damageText.style.left = Math.max(10, to.x - 60) + "px";
+  damageText.style.top = to.y + "px";
+
+  damageText.textContent = hit
+    ? `${critical ? "CHÍ MẠNG " : ""}−${damage}`
+    : "NÉ ĐÒN!";
+
+  $("arena").append(damageText);
+  setTimeout(() => damageText.remove(), 1000);
+
+  // Máu giảm khi đạn chạm vào mục tiêu.
+  if (hit) {
+    if (target === "dragon") {
+      dragonHealth = Math.max(0, dragonHealth - damage);
+    } else {
+      health = Math.max(0, health - damage);
+    }
+  }
+
+  updateUI();
+  await wait(550);
+
+  $(target).classList.remove("hurt", "dodging");
+}
+
+function finishGame(won) {
+  gameContinue = false;
+  auto = false;
+
+  if (won) {
+    level = 6;
+    xp += 600;
+    $("dragon").classList.add("dead");
+
+    $("result").textContent =
+      "🏆 CHIẾN THẮNG! Cấp 6 — XP +600";
+
+    addLog("Bạn đạt danh hiệu Dũng sĩ diệt Rồng!");
+  } else {
+    $("hero").classList.add("dead");
+
+    $("result").textContent =
+      "💀 THẤT BẠI! Nhấn Chơi lại để thử tiếp.";
+
+    addLog("Anh hùng đã gục ngã.");
+  }
+}
+
+async function playTurn() {
+  if (busy || !gameContinue) return;
+
+  busy = true;
+  round++;
+  updateUI();
+
+  try {
+    const heroHit = Math.random() * 100 > dragonAgi;
+    const heroCritical =
+      heroHit && Math.random() * 100 < intel;
+
+    // Giữ code gốc: đòn thường + thêm 2 × STR.
+    // Tổng sát thương chí mạng là 3 × STR.
+    const heroDamage = strength * (heroCritical ? 3 : 1);
+
+    await attackEffect(
+      "hero", "dragon", heroHit, heroDamage, heroCritical
+    );
+
+    addLog(heroHit
+      ? `Lượt ${round}: TRẢM LONG! ` +
+        `${heroCritical ? "Chí mạng! " : ""}` +
+        `Rồng mất ${heroDamage} HP.`
+      : `Lượt ${round}: Rồng né được đòn đánh!`
+    );
+
+    if (dragonHealth <= 0) {
+      finishGame(true);
+      return;
+    }
+
+    await wait(250);
+
+    const dragonHit = Math.random() * 100 > agility;
+    const dragonCritical =
+      dragonHit && Math.random() * 100 < dragonInt;
+
+    const dragonDamage =
+      dragonStr * (dragonCritical ? 3 : 1);
+
+    await attackEffect(
+      "dragon", "hero", dragonHit, dragonDamage, dragonCritical
+    );
+
+    addLog(dragonHit
+      ? `HỎA CẦU! ${dragonCritical ? "Chí mạng! " : ""}` +
+        `Bạn mất ${dragonDamage} HP.`
+      : "Bạn đã né được hỏa cầu!"
+    );
+
+    if (health <= 0) {
+      finishGame(false);
+    }
+  } catch (error) {
+    auto = false;
+    addLog("Hoạt ảnh gặp lỗi. Hãy dùng Chrome hoặc Edge phiên bản mới.");
+    console.error(error);
+  } finally {
+    busy = false;
+    updateUI();
+
+    if (auto && gameContinue) {
+      setTimeout(() => {
+        if (auto) playTurn();
+      }, 500);
+    }
+  }
+}
+
+$("attackButton").addEventListener("click", playTurn);
+$("resetButton").addEventListener("click", resetGame);
+
+$("autoButton").addEventListener("click", () => {
+  auto = !auto;
+  updateUI();
+
+  if (auto && !busy) {
+    playTurn();
+  }
+});
+
+for (const id of ["playerName", "role", "mode"]) {
+  $(id).addEventListener("change", resetGame);
+}
+
+const dragonImage = $("dragonImage");
+
+function checkImage() {
+  $("imageWarning").hidden = dragonImage.naturalWidth > 0;
+}
+
+dragonImage.addEventListener("load", checkImage);
+dragonImage.addEventListener("error", checkImage);
+
+if (dragonImage.complete) {
+  checkImage();
+}
+
+resetGame();
+</script>
+</body>
+</html>
