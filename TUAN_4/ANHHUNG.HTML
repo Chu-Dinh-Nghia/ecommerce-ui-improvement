@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anh hùng đấu Rồng</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #101827;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+main { max-width: 1050px; margin: auto; padding: 20px; }
+h1 { text-align: center; color: #ffc66d; }
+.settings, .controls {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  justify-content: center; margin: 20px 0;
+}
+input, select, button {
+  padding: 12px; border-radius: 8px;
+  border: 1px solid #64748b;
+  background: #25334b; color: white;
+}
+button { cursor: pointer; }
+button:disabled { opacity: .5; cursor: default; }
+#attack { background: #bc642a; }
+#arena {
+  height: 440px; position: relative; overflow: hidden;
+  border: 2px solid #65718a; border-radius: 15px;
+  background:
+    radial-gradient(circle at 50% 45%, #536079, transparent 45%),
+    linear-gradient(#111a30 65%, #423737);
+}
+.health {
+  position: absolute; top: 20px; width: 38%; z-index: 3;
+}
+.health.left { left: 20px; }
+.health.right { right: 20px; text-align: right; }
+.bar {
+  height: 18px; background: #151515;
+  margin: 8px 0; border-radius: 10px; overflow: hidden;
+}
+.fill { height: 100%; transition: width .4s; }
+#heroBar { background: #45d7ac; }
+#dragonBar { background: #f16a45; }
+.fighter { position: absolute; bottom: 40px; }
+#hero {
+  left: 9%; font-size: clamp(90px, 16vw, 170px);
+  filter: drop-shadow(0 0 15px #63d7ff);
+}
+#dragon { right: 3%; width: 46%; }
+#dragon img { width: 100%; display: block; }
+.attack { animation: attack .4s; }
+.hurt { animation: hurt .5s; }
+.dodge { animation: dodge .5s; }
+.dead { opacity: .3; filter: grayscale(1) !important; }
+@keyframes attack {
+  50% { transform: translateY(-20px) scale(1.08); }
+}
+@keyframes hurt {
+  20%, 60% {
+    filter: brightness(2) drop-shadow(0 0 20px red);
+    transform: translateX(10px);
+  }
+  40%, 80% { transform: translateX(-10px); }
+}
+@keyframes dodge {
+  50% { transform: translateY(-45px); opacity: .4; }
+}
+.shot {
+  position: absolute; width: 30px; height: 30px;
+  border-radius: 50%; z-index: 5;
+  background: currentColor;
+  box-shadow: 0 0 30px 12px currentColor;
+  transform: translate(-50%, -50%);
+}
+.damage {
+  position: absolute; z-index: 6;
+  font-size: 25px; font-weight: bold;
+  color: #ffe397; text-shadow: 0 2px 4px black;
+  animation: float 1s forwards;
+  white-space: nowrap;
+}
+@keyframes float {
+  to { transform: translateY(-90px); opacity: 0; }
+}
+#result { text-align: center; color: #ffd17c; min-height: 30px; }
+#stats { text-align: center; color: #b8d3ed; line-height: 1.6; }
+#log {
+  height: 170px; overflow: auto;
+  background: #1c2940; padding: 15px 30px;
+  border-radius: 10px;
+}
+#log li { margin-bottom: 9px; }
+@media (max-width: 600px) {
+  main { padding: 10px; }
+  #arena { height: 350px; }
+  .health { width: 40%; font-size: 12px; }
+  #dragon { bottom: 55px; width: 49%; }
+}
+</style>
+<script src="anhhung.js" defer></script>
+</head>
+<body>
+<main>
+  <h1>⚔ ANH HÙNG ĐẤU RỒNG</h1>
+
+  <div class="settings">
+    <input id="name" value="Chu Đình Nghĩa"
+           aria-label="Tên anh hùng" maxlength="40">
+    <select id="role" aria-label="Phân cấp">
+      <option value="a">Chiến Binh</option>
+      <option value="b">Sát Thủ</option>
+      <option value="c">Thợ Săn</option>
+    </select>
+    <select id="mode" aria-label="Chế độ">
+      <option value="practice">Luyện tập</option>
+      <option value="original">Chỉ số gốc của bạn</option>
+    </select>
+  </div>
+
+  <p id="stats"></p>
+
+  <div id="arena">
+    <div class="health left">
+      <strong id="heroName"></strong>
+      <div class="bar"><div id="heroBar" class="fill"></div></div>
+      <span id="heroHP"></span>
+    </div>
+
+    <div class="health right">
+      <strong>🐉 Rồng Già</strong>
+      <div class="bar"><div id="dragonBar" class="fill"></div></div>
+      <span id="dragonHP"></span>
+    </div>
+
+    <div id="hero" class="fighter" aria-label="Anh hùng">🧙‍♂️</div>
+    <div id="dragon" class="fighter">
+      <img src="rong.png" alt="Rồng đỏ">
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="attack">⚔ Tấn công</button>
+    <button id="auto">▶ Tự động</button>
+    <button id="reset">↻ Chơi lại</button>
+  </div>
+
+  <h2 id="result" role="status"></h2>
+  <ol id="log" aria-live="polite"></ol>
+</main>
+</body>
+</html>
