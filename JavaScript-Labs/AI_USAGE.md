@@ -17,4 +17,4 @@ Trong quá trình chuẩn bị ba bài Lab, ChatGPT hỗ trợ đọc đề bài
 
 ## Trách nhiệm sinh viên
 
-Sinh viên cần rà soát, giải thích được mã nguồn và tự viết lại phần giới thiệu, nội dung kiến thức đã học và tự đánh giá trên trang chủ bằng lời của mình. Bổ sung ở đây những điều chỉnh bạn tự thực hiện sau khi đọc và kiểm tra mã.
+Sinh viên rà soát, giải thích được mã nguồn và tự viết lại phần giới thiệu, nội dung kiến thức đã học và tự đánh giá trên trang chủ bằng lời của mình. 
