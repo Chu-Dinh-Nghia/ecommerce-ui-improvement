@@ -2,6 +2,8 @@
 
 Website bán phim cho bài tập cá nhân ASP.NET Core MVC. Dự án nằm trong `SourceCode/`; các bài thực hành trước trong repository được giữ nguyên.
 
+Website public: [cinenghia409.somee.com](http://cinenghia409.somee.com/). Hosting Somee miễn phí dùng SQL Server `CineNghia409`; cấu hình production có mật khẩu chỉ nằm trên hosting.
+
 ## Công nghệ
 
 - ASP.NET Core MVC và Identity trên .NET 10

@@ -8,3 +8,5 @@ publish/
 *.zip
 *.user
 .env
+Report/page-*.png
+Report/report-preview.pdf
