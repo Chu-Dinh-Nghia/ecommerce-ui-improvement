@@ -5,7 +5,7 @@
 Lab thực hành bố cục, thiết kế responsive và hiệu ứng tương tác bằng CSS và Bootstrap.
 
 - [Repository học phần](https://github.com/Chu-Dinh-Nghia/ecommerce-ui-improvement)
-- [Đường dẫn dự kiến của GitHub Pages](https://chu-dinh-nghia.github.io/ecommerce-ui-improvement/CSS-NangCao/)
+- [GitHub Pages](https://chu-dinh-nghia.github.io/ecommerce-ui-improvement/CSS-NangCao/)
 
 ## Cấu trúc
 
