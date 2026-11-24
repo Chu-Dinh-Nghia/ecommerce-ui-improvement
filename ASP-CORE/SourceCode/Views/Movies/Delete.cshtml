@@ -1,0 +1,3 @@
+@model SourceCode.Models.Movie
+@{ ViewData["Title"] = "Xóa phim"; }
+<div class="panel" style="max-width:650px"><span class="eyebrow">Xác nhận</span><h1>Xóa @Model.Title?</h1><p class="text-muted">Hành động này sẽ xóa phim khỏi danh mục. Phim đã có trong đơn hàng sẽ được giữ lại.</p><form asp-action="Delete" asp-route-id="@Model.Id" method="post"><button class="btn btn-danger" type="submit">Xóa phim</button> <a class="btn btn-outline-light" asp-action="Details" asp-route-id="@Model.Id">Hủy</a></form></div>

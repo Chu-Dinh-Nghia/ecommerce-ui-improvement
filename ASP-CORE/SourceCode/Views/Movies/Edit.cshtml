@@ -1,0 +1,5 @@
+@model SourceCode.Models.Movie
+@{ ViewData["Title"] = "Sửa phim"; }
+<div class="section-heading"><div><span class="eyebrow">Quản lý phim</span><h1>Sửa @Model.Title</h1></div></div>
+<div class="panel" style="max-width:760px"><form asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data"><partial name="_Form" model="Model" /></form></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

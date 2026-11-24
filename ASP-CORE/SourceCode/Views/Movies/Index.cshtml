@@ -1,0 +1,12 @@
+@model IEnumerable<SourceCode.Models.Movie>
+@inject IConfiguration Config
+@{ ViewData["Title"] = "Khám phá phim"; }
+<section class="hero">
+    <div><span class="eyebrow">Tuyển chọn bởi Chu Đình Nghĩa</span><h1 class="display-title">Mỗi bộ phim.<br />Một thế giới mới.</h1><p class="lead-copy">Khám phá những câu chuyện đáng nhớ, chọn phim bạn thích và đặt mua chỉ trong vài bước. Bộ sưu tập được tuyển chọn riêng cho CINÉ NGHĨA.</p><a class="btn btn-gold mt-2" href="#movies">Khám phá bộ sưu tập →</a></div>
+    <div class="hero-art" aria-hidden="true"></div>
+</section>
+<section id="movies">
+    <div class="section-heading"><div><span class="eyebrow">Bộ sưu tập</span><h2>Phim nổi bật</h2><p>@Model.Count() tựa phim đang chờ bạn khám phá</p></div><div><a class="btn btn-outline-light" asp-controller="Genres" asp-action="Index">Xem thể loại</a> @if (string.Equals(User.Identity?.Name, Config["Admin:Email"], StringComparison.OrdinalIgnoreCase)) { <a class="btn btn-gold" asp-action="Create">+ Thêm phim</a> }</div></div>
+    @if (!Model.Any()) { <div class="empty-state"><div class="symbol">✦</div><h3>Chưa có phim nào</h3><p>Đăng nhập và thêm những bộ phim đầu tiên.</p></div> }
+    else { <div class="movie-grid">@foreach (var movie in Model) { <article class="movie-card"><a asp-action="Details" asp-route-id="@movie.Id"><img class="movie-poster" src="@movie.PicturePath" alt="Poster phim @movie.Title" /></a><div class="movie-body"><span class="movie-genre">@movie.Genre?.Name</span><h3 class="movie-title"><a asp-action="Details" asp-route-id="@movie.Id">@movie.Title</a></h3><p class="movie-summary">@movie.Summary</p><div class="movie-bottom"><span class="price">@movie.Price.ToString("N0")đ</span><form asp-controller="Cart" asp-action="Add" method="post"><input type="hidden" name="id" value="@movie.Id" /><button class="btn btn-gold btn-sm" type="submit">Thêm vào giỏ</button></form></div></div></article> }</div> }
+</section>

@@ -1,0 +1,4 @@
+@model SourceCode.Models.Genre
+@{ ViewData["Title"] = "Thêm thể loại"; }
+<div class="section-heading"><div><span class="eyebrow">Quản lý</span><h1>Thêm thể loại</h1></div></div><div class="panel" style="max-width:600px"><form asp-action="Create" method="post"><partial name="_Form" model="Model" /></form></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

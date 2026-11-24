@@ -1,0 +1,5 @@
+@model IEnumerable<SourceCode.Models.Genre>
+@inject IConfiguration Config
+@{ ViewData["Title"] = "Thể loại"; }
+<div class="section-heading"><div><span class="eyebrow">Danh mục</span><h1>Thể loại phim</h1><p>Chọn câu chuyện hợp tâm trạng của bạn.</p></div>@if (string.Equals(User.Identity?.Name, Config["Admin:Email"], StringComparison.OrdinalIgnoreCase)) { <a class="btn btn-gold" asp-action="Create">+ Thêm thể loại</a> }</div>
+<div class="row g-3">@foreach (var genre in Model) { <div class="col-md-4"><div class="panel h-100"><span class="eyebrow">CINÉ NGHĨA</span><h2 class="mt-2">@genre.Name</h2><p class="text-muted">@genre.Movies.Count phim</p>@if (string.Equals(User.Identity?.Name, Config["Admin:Email"], StringComparison.OrdinalIgnoreCase)) { <a asp-action="Edit" asp-route-id="@genre.Id">Sửa</a> <span class="text-muted">·</span> <a asp-action="Delete" asp-route-id="@genre.Id">Xóa</a> }</div></div> }</div>

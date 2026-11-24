@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#14121e" />
+    <title>@ViewData["Title"] · CINÉ NGHĨA</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-row">
+            <a class="brand" asp-controller="Movies" asp-action="Index" aria-label="Ciné Nghĩa, trang chủ"><span class="brand-mark">✦</span> CINÉ <strong>NGHĨA</strong></a>
+            <nav class="main-nav" aria-label="Điều hướng chính">
+                <a asp-controller="Movies" asp-action="Index">Phim</a>
+                <a asp-controller="Genres" asp-action="Index">Thể loại</a>
+                <a asp-controller="Cart" asp-action="Index">Giỏ hàng</a>
+            </nav>
+            <div class="account-nav"><partial name="_LoginPartial" /></div>
+        </div>
+    </header>
+    <main class="container page-shell" role="main">
+        @if (TempData["Notice"] is string notice) { <div class="alert alert-warning">@notice</div> }
+        @RenderBody()
+    </main>
+    <footer class="site-footer">
+        <div class="container footer-row"><span>CINÉ NGHĨA · Những câu chuyện đáng xem</span><span>© @DateTime.Now.Year · 31241026950 · Chu Đình Nghĩa</span></div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

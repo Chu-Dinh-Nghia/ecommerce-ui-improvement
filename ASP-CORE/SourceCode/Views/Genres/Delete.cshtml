@@ -1,0 +1,3 @@
+@model SourceCode.Models.Genre
+@{ ViewData["Title"] = "Xóa thể loại"; }
+<div class="panel" style="max-width:600px"><span class="eyebrow">Xác nhận</span><h1>Xóa @Model.Name?</h1><p class="text-muted">Chỉ có thể xóa thể loại chưa có phim.</p><form asp-action="Delete" asp-route-id="@Model.Id" method="post"><button class="btn btn-danger" type="submit">Xóa thể loại</button> <a asp-action="Index" class="btn btn-outline-light">Hủy</a></form></div>

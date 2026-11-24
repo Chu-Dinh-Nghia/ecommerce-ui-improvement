@@ -1,0 +1,4 @@
+@model SourceCode.Models.Genre
+<div asp-validation-summary="ModelOnly" class="text-danger"></div><input asp-for="Id" type="hidden" />
+<div class="mb-4"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+<button class="btn btn-gold" type="submit">Lưu thể loại</button> <a asp-action="Index" class="btn btn-outline-light">Hủy</a>

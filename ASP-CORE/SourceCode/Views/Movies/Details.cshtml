@@ -1,0 +1,5 @@
+@model SourceCode.Models.Movie
+@inject IConfiguration Config
+@{ ViewData["Title"] = Model.Title; }
+<a asp-action="Index" class="text-decoration-none">← Quay về bộ sưu tập</a>
+<div class="row g-5 mt-1"><div class="col-md-5"><img class="detail-poster" src="@Model.PicturePath" alt="Poster phim @Model.Title" /></div><div class="col-md-7"><span class="eyebrow">@Model.Genre?.Name</span><h1 class="display-title">@Model.Title</h1><p class="lead-copy">@Model.Summary</p><div class="my-4"><span class="pill">Phát hành @Model.ReleaseDate.ToString("dd/MM/yyyy")</span><span class="pill">★ @Model.Rated.ToString("0.0")/5</span></div><h2 class="price mb-4">@Model.Price.ToString("N0")đ</h2><form asp-controller="Cart" asp-action="Add" method="post"><input type="hidden" name="id" value="@Model.Id" /><button type="submit" class="btn btn-gold">Thêm vào giỏ hàng →</button></form>@if (string.Equals(User.Identity?.Name, Config["Admin:Email"], StringComparison.OrdinalIgnoreCase)) { <div class="mt-4"><a asp-action="Edit" asp-route-id="@Model.Id">Sửa phim</a> · <a asp-action="Delete" asp-route-id="@Model.Id">Xóa phim</a></div> }</div></div>

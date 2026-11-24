@@ -1,0 +1,9 @@
+@model SourceCode.Models.Movie
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input asp-for="Id" type="hidden" />
+<div class="mb-3"><label asp-for="Title" class="form-label"></label><input asp-for="Title" class="form-control" /><span asp-validation-for="Title" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Summary" class="form-label"></label><textarea asp-for="Summary" class="form-control" rows="4"></textarea><span asp-validation-for="Summary" class="text-danger"></span></div>
+<div class="row"><div class="col-sm-6 mb-3"><label asp-for="GenreId" class="form-label"></label><select asp-for="GenreId" asp-items="ViewBag.GenreId" class="form-select"><option value="">Chọn thể loại</option></select><span asp-validation-for="GenreId" class="text-danger"></span></div><div class="col-sm-6 mb-3"><label asp-for="ReleaseDate" class="form-label"></label><input asp-for="ReleaseDate" class="form-control" /><span asp-validation-for="ReleaseDate" class="text-danger"></span></div></div>
+<div class="row"><div class="col-sm-6 mb-3"><label asp-for="Price" class="form-label"></label><input asp-for="Price" class="form-control" /><span asp-validation-for="Price" class="text-danger"></span></div><div class="col-sm-6 mb-3"><label asp-for="Rated" class="form-label"></label><input asp-for="Rated" class="form-control" /><span asp-validation-for="Rated" class="text-danger"></span></div></div>
+<div class="mb-4"><label asp-for="PictureUpload" class="form-label"></label><input asp-for="PictureUpload" type="file" accept="image/jpeg,image/png,image/webp" class="form-control" /><small class="text-muted">JPG, PNG hoặc WebP; tối đa 2 MB. Để trống khi sửa để giữ ảnh cũ.</small><span asp-validation-for="PictureUpload" class="text-danger"></span></div>
+<button type="submit" class="btn btn-gold">Lưu phim</button> <a asp-action="Index" class="btn btn-outline-light">Hủy</a>

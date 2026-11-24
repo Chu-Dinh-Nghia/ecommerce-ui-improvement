@@ -1,0 +1,3 @@
+@model SourceCode.Models.Order
+@{ ViewData["Title"] = "Đặt hàng thành công"; }
+<div class="empty-state"><div class="symbol">✦</div><span class="eyebrow">Hoàn tất</span><h1 class="display-title">Cảm ơn bạn!</h1><p>Đơn hàng <strong>#@Model.Id</strong> đã được lưu. Tổng giá trị: <strong>@Model.Total.ToString("N0")đ</strong>.</p><p class="text-muted">Nếu hệ thống email được cấu hình, xác nhận sẽ được gửi tới địa chỉ bạn đã nhập.</p><a class="btn btn-gold mt-3" asp-controller="Movies" asp-action="Index">Tiếp tục khám phá</a></div>

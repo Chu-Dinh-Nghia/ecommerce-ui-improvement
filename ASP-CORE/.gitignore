@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+.tools/
+SourceCode/appsettings.Production.json
+SourceCode/wwwroot/images/uploads/*
+!SourceCode/wwwroot/images/uploads/.gitkeep
+publish/
+*.zip
+*.user
+.env
