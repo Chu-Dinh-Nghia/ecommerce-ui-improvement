@@ -2,8 +2,8 @@
 
 Chỉ sử dụng ảnh chụp nguyên bản từ chính dự án và website. Những hình không có ảnh được giữ dưới dạng khung `[CẦN CHỤP]` trong Word.
 
-- Vị trí đã chèn ảnh thật: 33
-- Khung cần chụp: 31
+- Vị trí đã chèn ảnh thật: 34
+- Khung cần chụp: 30
 - Hình Lab mẫu không áp dụng cho dự án này: 12
 
 ## Ảnh thật đã chèn
@@ -12,6 +12,7 @@ Chỉ sử dụng ảnh chụp nguyên bản từ chính dự án và website. N
 - Hình 2.4: `images/hinh_2_4.jpg` — Program.cs cấu hình UseSqlServer thay cho provider SQLite.
 - Hình 2.5: `images/hinh_2_5.jpg` — SourceCode.csproj thực tế với Nullable=enable và package EF Core 10.0.7.
 - Hình 2.6: `images/hinh_2_6.jpg` — Cây thư mục Controllers, Models, Views, Data, Services của dự án trên GitHub.
+- Hình 3.1: `images/hinh_3_1.png` — Trang Somee Free ASP.NET Hosting hiện tại: gói $0.00/Month và nút Order Now.
 - Hình 4.1: `images/hinh_2_6.jpg` — Cây cấu trúc dự án thực tế; Model dùng Order và OrderItem thay cho tên class Lab mẫu.
 - Hình 4.2: `images/hinh_4_2.jpg` — ApplicationDbContext.cs chứa bốn DbSet và kế thừa IdentityDbContext.
 - Hình 4.3: `images/hinh_4_3.jpg` — Migration InitialCreate trong repository; dự án không có các migration Movie, HoaDon, Shipping riêng.
@@ -48,7 +49,6 @@ Chỉ sử dụng ảnh chụp nguyên bản từ chính dự án và website. N
 - Hình 1.2: Terminal hiển thị dotnet ef --version.
 - Hình 2.1: Terminal sau lệnh tạo template MVC và restore thành công.
 - Hình 2.2: Kết quả dotnet dev-certs https --trust trên máy thực hiện.
-- Hình 3.1: Somee hiển thị gói Free .NET Hosting và nút Learn More.
 - Hình 3.2: Trang MS SQL Databases trên Somee và nút CREATE.
 - Hình 3.3: Form tạo database CineNghia409 trước khi xác nhận.
 - Hình 3.4: Connection details của Somee, đã che mật khẩu và phần pwd trong chuỗi kết nối.

@@ -172,9 +172,9 @@ figures([
 
 h("3  Cơ sở dữ liệu Somee và kết nối")
 text("Website public dùng database CineNghia409 trên Somee. Connection string production được đặt riêng trong cấu hình trên hosting; bản GitHub chỉ có cấu hình mẫu và cấu hình local không chứa mật khẩu Somee. Program.cs gọi MigrateAsync khi ứng dụng khởi động, nên migration tạo hoặc cập nhật bảng khi kết nối DB hợp lệ.")
-text("Em không chèn ảnh màn hình thông tin kết nối vì ảnh chưa được chụp và có thể lộ pwd. Các bước đăng ký, tạo DB, đăng ký tài khoản và lỗi trước khi migration không thể quay lại đúng trạng thái ban đầu; những mục đó được đánh dấu rõ để tránh trình bày như bằng chứng đã có.")
+text("Em đã chụp trang gói hosting miễn phí hiện tại của Somee. Ảnh thông tin kết nối chưa có và có thể lộ pwd. Các bước đăng ký, tạo DB, đăng ký tài khoản và lỗi trước khi migration không thể quay lại đúng trạng thái ban đầu; những mục đó được đánh dấu rõ để tránh trình bày như bằng chứng đã có.")
 figures([
-    ("3.1", "Somee hiển thị gói Free .NET Hosting và nút Learn More.", None, None),
+    ("3.1", "Trang Somee Free ASP.NET Hosting hiện tại: gói $0.00/Month và nút Order Now.", "hinh_3_1.png", None),
     ("3.2", "Trang MS SQL Databases trên Somee và nút CREATE.", None, None),
     ("3.3", "Form tạo database CineNghia409 trước khi xác nhận.", None, None),
     ("3.4", "Connection details của Somee, đã che mật khẩu và phần pwd trong chuỗi kết nối.", None, None),
