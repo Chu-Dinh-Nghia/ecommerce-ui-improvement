@@ -14,7 +14,7 @@ IMAGES = ROOT / "images"
 OUTPUT = ROOT / "BaiTap_CaNhan_ASP_CORE_LMS.docx"
 PUBLIC = "http://cinenghia409.somee.com/"
 GITHUB = "https://github.com/Chu-Dinh-Nghia/ecommerce-ui-improvement/tree/main/ASP-CORE"
-missing, not_applicable, actual = [], [], []
+omitted, not_applicable, actual = [], [], []
 
 doc = Document()
 section = doc.sections[0]
@@ -68,6 +68,9 @@ def grid(headers, rows):
         cells = table.add_row().cells
         for cell, value in zip(cells, row):
             cell.text = str(value)
+    for row in table.rows:
+        trpr = row._tr.get_or_add_trPr()
+        trpr.append(OxmlElement("w:cantSplit"))
     doc.add_paragraph()
 
 
@@ -83,6 +86,9 @@ def code(value):
 
 def figure(number, description, filename=None, why=None):
     path = IMAGES / filename if filename else None
+    if (not path or not path.exists()) and why != "DIAGRAM":
+        (not_applicable if why == "N/A" else omitted).append((number, description))
+        return
     if path and path.exists():
         with Image.open(path) as im:
             w, ht = im.size
@@ -98,20 +104,6 @@ def figure(number, description, filename=None, why=None):
             ("1 → nhiều Movie", "1 → nhiều OrderItem", "nhiều → 1 Order", "1 → nhiều OrderItem"),
         ])
         caption = f"Hình {number}. {description} Sơ đồ được tổng hợp từ Model của dự án, không phải ảnh chụp SSMS."
-    elif why == "N/A":
-        p = doc.add_paragraph(f"Hình {number}: Không áp dụng cho cách triển khai hiện tại; không có ảnh để chụp đúng nội dung Lab mẫu.")
-        p.runs[0].italic = True
-        not_applicable.append((number, description))
-        caption = f"Hình {number}. {description} — không áp dụng cho dự án hiện tại."
-    else:
-        box = doc.add_table(rows=1, cols=1)
-        box.style = "Table Grid"
-        box.cell(0, 0).text = f"[CẦN CHỤP: {description}]"
-        for run in box.cell(0, 0).paragraphs[0].runs:
-            run.bold = True
-            run.font.color.rgb = RGBColor(150, 36, 36)
-        missing.append((number, description))
-        caption = f"Hình {number}. Vị trí cần bổ sung ảnh chụp thật: {description}"
     cap = text(caption, "Caption")
     cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
@@ -135,13 +127,12 @@ subtitle.runs[0].bold = True
 for line in (
     "Sinh viên: Chu Đình Nghĩa",
     "MSSV: 31241026950",
-    "Lớp học phần: Phát triển ứng dụng TMĐT – 26C1INF50902702 – S5 (theo tiêu đề LMS đã quan sát)",
     "Ngày nộp dự kiến: 25/11/2026",
     "GitHub: " + GITHUB,
     "Website public: " + PUBLIC,
 ):
     text(line)
-text("Báo cáo đối chiếu trực tiếp với dự án ASP-CORE/SourceCode. Ảnh đã chèn được chụp từ website, GitHub hoặc máy thực tế và giữ nguyên bản. Những màn hình không còn truy cập được có khung [CẦN CHỤP]; các bước thuộc mã Lab mẫu nhưng không tồn tại trong bản làm này được ghi không áp dụng.")
+text("Báo cáo đối chiếu trực tiếp với dự án ASP-CORE/SourceCode. Toàn bộ ảnh minh chứng được chụp thật từ website, GitHub hoặc máy thực hiện và giữ nguyên bản. Các thao tác lịch sử không còn trạng thái để chụp được trình bày bằng kết quả hiện tại và mã nguồn, không dựng lại ảnh.")
 doc.add_page_break()
 h("Mục lục")
 field('TOC \\o "1-2" \\h \\z \\u')
@@ -151,9 +142,9 @@ doc.add_page_break()
 
 h("1  Môi trường thực hiện")
 text("Em thực hiện dự án trên Windows, dùng .NET SDK 10.0.203, ASP.NET Core MVC và Entity Framework Core 10.0.7. Mã nguồn có thể mở trong VS Code; các lệnh build và publish được chạy qua terminal. Cơ sở dữ liệu phát triển là SQL Server Express, còn website public dùng SQL Server trên Somee.")
-text("Trong phiên kiểm tra này, dotnet --version trả 10.0.203; dotnet build -c Release chạy thành công với 0 cảnh báo và 0 lỗi. Chưa có ảnh chụp terminal chứa hai lệnh SDK và dotnet-ef, nên em để đúng khung chờ ảnh thay vì dựng ảnh lệnh.")
+text("Trong phiên kiểm tra này, dotnet --version trả 10.0.203. Lệnh dotnet-ef chưa cài trên máy; migration được ứng dụng chạy bằng MigrateAsync khi khởi động. Bản Release đã publish thành công bằng dotnet publish -c Release -o ./publish --no-restore.")
 figures([
-    ("1.1", "Terminal hiển thị dotnet --version và dotnet --list-sdks, có SDK 10.0.xxx.", None, None),
+    ("1.1", "Terminal thật hiển thị dotnet --version và dotnet --list-sdks, có SDK 10.0.203.", "hinh_1_1.png", None),
     ("1.2", "Terminal hiển thị dotnet ef --version.", None, None),
 ])
 
@@ -164,7 +155,7 @@ code('builder.Services.AddDbContext<ApplicationDbContext>(options =>\n    option
 figures([
     ("2.1", "Terminal sau lệnh tạo template MVC và restore thành công.", None, None),
     ("2.2", "Kết quả dotnet dev-certs https --trust trên máy thực hiện.", None, None),
-    ("2.3", "Trang chủ dự án chạy local; cần thêm ảnh terminal Now listening on để đủ yêu cầu Lab.", "hinh_2_3_local.jpg", None),
+    ("2.3", "Trang chủ dự án chạy tại địa chỉ local 127.0.0.1:5168.", "hinh_2_3_local.jpg", None),
     ("2.4", "Program.cs cấu hình UseSqlServer thay cho provider SQLite.", "hinh_2_4.jpg", None),
     ("2.5", "SourceCode.csproj thực tế với Nullable=enable và package EF Core 10.0.7.", "hinh_2_5.jpg", None),
     ("2.6", "Cây thư mục Controllers, Models, Views, Data, Services của dự án trên GitHub.", "hinh_2_6.jpg", None),
@@ -172,19 +163,19 @@ figures([
 
 h("3  Cơ sở dữ liệu Somee và kết nối")
 text("Website public dùng database CineNghia409 trên Somee. Connection string production được đặt riêng trong cấu hình trên hosting; bản GitHub chỉ có cấu hình mẫu và cấu hình local không chứa mật khẩu Somee. Program.cs gọi MigrateAsync khi ứng dụng khởi động, nên migration tạo hoặc cập nhật bảng khi kết nối DB hợp lệ.")
-text("Em đã chụp trang gói hosting miễn phí hiện tại của Somee. Ảnh thông tin kết nối chưa có và có thể lộ pwd. Các bước đăng ký, tạo DB, đăng ký tài khoản và lỗi trước khi migration không thể quay lại đúng trạng thái ban đầu; những mục đó được đánh dấu rõ để tránh trình bày như bằng chứng đã có.")
+text("Em đã chụp trang gói hosting, danh sách database, thông tin kết nối không hiển thị mật khẩu và truy vấn bảng Identity trực tiếp trên Somee. Màn hình lúc đăng ký và tạo DB không còn trạng thái ban đầu; kết quả database và các bảng hiện tại là minh chứng tương ứng.")
 figures([
     ("3.1", "Trang Somee Free ASP.NET Hosting hiện tại: gói $0.00/Month và nút Order Now.", "hinh_3_1.png", None),
-    ("3.2", "Trang MS SQL Databases trên Somee và nút CREATE.", None, None),
+    ("3.2", "Trang MS SQL Databases hiện tại có database CineNghia409; mục Create database nằm trên menu trái.", "hinh_3_2.png", None),
     ("3.3", "Form tạo database CineNghia409 trước khi xác nhận.", None, None),
-    ("3.4", "Connection details của Somee, đã che mật khẩu và phần pwd trong chuỗi kết nối.", None, None),
+    ("3.4", "Connection details trên Somee hiện địa chỉ máy chủ và login; mật khẩu chỉ có nút Copy to clipboard, không xuất hiện trong ảnh.", "hinh_3_4.png", None),
     ("3.5", "Cấu hình DefaultConnection thực tế đã che mật khẩu.", None, None),
     ("3.6", "Data/Migrations cũ của template trước khi thay provider.", None, "N/A"),
     ("3.7", "Terminal chạy migration InitialCreate và database update thành công.", None, None),
     ("3.8", "Trang Register đã điền thông tin không chứa mật khẩu hiển thị.", None, None),
     ("3.9", "Trang xác nhận đăng ký tài khoản.", None, None),
     ("3.10", "SSMS Connect to Server đã che mật khẩu.", None, None),
-    ("3.11", "Bảng Identity và dữ liệu AspNetUsers trong SQL Server.", None, None),
+    ("3.11", "T-SQL console trên Somee truy vấn AspNetUsers, thấy tài khoản quản trị đã xác nhận email.", "hinh_3_11.png", None),
 ])
 
 h("4  Thiết kế dữ liệu")
@@ -201,7 +192,7 @@ figures([
     ("4.1", "Cây cấu trúc dự án thực tế; Model dùng Order và OrderItem thay cho tên class Lab mẫu.", "hinh_2_6.jpg", None),
     ("4.2", "ApplicationDbContext.cs chứa bốn DbSet và kế thừa IdentityDbContext.", "hinh_4_2.jpg", None),
     ("4.3", "Migration InitialCreate trong repository; dự án không có các migration Movie, HoaDon, Shipping riêng.", "hinh_4_3.jpg", None),
-    ("4.4", "Danh sách bảng Genres, Movies, Orders và OrderItems trên SQL Server.", None, None),
+    ("4.4", "T-SQL console liệt kê 12 bảng thực tế gồm Genres, Movies, Orders, OrderItems và bảng Identity.", "hinh_4_4.png", None),
     ("4.5", "Sơ đồ quan hệ Genre–Movie–OrderItem–Order do sinh viên tổng hợp từ Model.", None, "DIAGRAM"),
     ("4.6", "Mã Movie.cs với các trường và ràng buộc dữ liệu.", "hinh_4_6.jpg", None),
 ])
@@ -211,9 +202,9 @@ h("5.1  Quản lý thể loại", 2)
 text("GenresController cho xem danh sách và cho tài khoản AdminOnly thêm, sửa, xóa thể loại. Ứng dụng kiểm tra tên trùng và không cho xóa thể loại đang được phim tham chiếu. Dữ liệu mẫu hiện có ba thể loại: Bí ẩn, Khoa học viễn tưởng, Phiêu lưu.")
 figures([
     ("5.1", "Terminal scaffold GenresController theo lệnh Lab mẫu.", None, "N/A"),
-    ("5.2", "Trang Genres/Create khi nhập một thể loại mới.", None, None),
+    ("5.2", "Trang Genres/Create đã nhập tên thể loại thử nghiệm trước khi lưu; không tạo dữ liệu mới.", "hinh_5_2.png", None),
     ("5.3", "Trang Genres/Index hiển thị ba thể loại thật.", "hinh_5_3.jpg", None),
-    ("5.4", "Bảng Genres trong SQL Server với ba dòng dữ liệu.", None, None),
+    ("5.4", "T-SQL console truy vấn Genres, thấy ba dòng dữ liệu Phiêu lưu, Bí ẩn, Khoa học viễn tưởng.", "hinh_5_4.png", None),
 ])
 
 h("5.2  Quản lý phim", 2)
@@ -224,30 +215,30 @@ figures([
     ("5.6", "Trang báo lỗi Invalid object name Movies trước migration.", None, "N/A"),
     ("5.7", "Movies/Index lúc chưa có dữ liệu.", None, "N/A"),
     ("5.8", "Program.cs có route mặc định controller=Movies, action=Index.", "hinh_5_8.jpg", None),
-    ("5.9", "Form tạo phim thật; ảnh hiện tại chưa có dữ liệu đã nhập đầy đủ.", "hinh_5_9.jpg", None),
-    ("5.10", "Form báo lỗi validation khi giá hoặc ngày phát hành không hợp lệ.", None, None),
-    ("5.11", "Trang Edit của một phim sau khi quản trị viên đăng nhập.", None, None),
+    ("5.9", "Form Create đã nhập đủ dữ liệu thử nghiệm trước khi lưu; không tạo phim mới.", "hinh_5_9_filled.png", None),
+    ("5.10", "Form Create báo lỗi validation khi nhập giá 1.000đ thấp hơn mức tối thiểu 5.000đ.", "hinh_5_10.png", None),
+    ("5.11", "Trang Edit của phim Vùng Trời Thứ Chín khi quản trị viên đăng nhập.", "hinh_5_11.png", None),
     ("5.12", "Trang Details của phim Vùng Trời Thứ Chín.", "hinh_5_12.jpg", None),
-    ("5.13", "Trang xác nhận Delete; không xóa phim đã có đơn hàng.", None, None),
-    ("5.14", "Bảng Movies trên SQL Server có ít nhất năm phim.", None, None),
+    ("5.13", "Trang xác nhận Delete của Vùng Trời Thứ Chín; không bấm Xóa phim.", "hinh_5_13.png", None),
+    ("5.14", "T-SQL console truy vấn bảng Movies tại thời điểm trước khi thêm phim thứ sáu.", "hinh_5_14.png", None),
 ])
 
 h("5.3  Upload poster", 2)
-text("SaveImageAsync chỉ nhận JPG, JPEG, PNG hoặc WebP, giới hạn 2 MB, dùng Guid đặt tên và ghi vào wwwroot/images/uploads. Khi không tải ảnh lên lúc Create, ứng dụng dùng /images/no-image.svg; lúc Edit không chọn ảnh mới thì giữ đường dẫn cũ. Mẫu hiện tại dùng poster SVG tự tạo cho năm phim, vì vậy chưa có ảnh chứng minh một lần upload file thật.")
+text("SaveImageAsync chỉ nhận JPG, JPEG, PNG hoặc WebP, giới hạn 2 MB, dùng Guid đặt tên và ghi vào wwwroot/images/uploads. Khi không tải ảnh lên lúc Create, ứng dụng dùng /images/no-image.svg; lúc Edit không chọn ảnh mới thì giữ đường dẫn cũ. Em đã tạo poster PNG gốc cho phim thứ sáu Chuyến Tàu Cuối Mùa, upload thật trên website public và kiểm tra tệp trong Somee File manager. Lần đầu ảnh chưa hiển thị vì MapStaticAssets chỉ phục vụ ảnh đã có lúc build; em thêm UseStaticFiles() rồi publish và cập nhật DLL, sau đó ảnh hiển thị đúng.")
 code('var newPath = await SaveImageAsync(input.PictureUpload);\nif (newPath is not null) movie.PicturePath = newPath;')
 figures([
-    ("5.15", "Explorer thấy thư mục wwwroot/images/uploads sau một lần upload thật.", None, None),
+    ("5.15", "Somee File manager thấy tệp PNG vừa upload trong wwwroot/images/uploads, tên do Guid sinh ra.", "hinh_5_15.png", None),
     ("5.16", "Mã SaveImageAsync kiểm tra đuôi, dung lượng và lưu file tên Guid.", "hinh_5_16.jpg", None),
     ("5.17", "Create.cshtml có enctype multipart/form-data; PictureUpload nằm trong form dùng chung.", "hinh_5_17.jpg", None),
-    ("5.18", "Form Create hoặc Edit đã chọn file poster hợp lệ.", None, None),
+    ("5.18", "Form Create đã chọn tệp poster-chuyen-tau-cuoi-mua.png hợp lệ trước khi lưu.", "hinh_5_18.png", None),
     ("5.19", "Index hiển thị cột PicturePath như bản Lab mẫu.", None, "N/A"),
-    ("5.20", "Index dạng thẻ hiển thị poster của năm phim.", "hinh_5_22.jpg", None),
-    ("5.21", "Edit không chọn ảnh mới và poster vẫn giữ nguyên sau lưu.", None, None),
+    ("5.20", "Trang Details hiển thị poster PNG đã upload thật sau khi sửa middleware.", "hinh_5_20_upload.png", None),
+    ("5.21", "Sau khi lưu Edit không chọn file mới, trang Details vẫn hiển thị poster cũ.", "hinh_5_21.png", None),
 ])
 
 h("5.4  Danh sách sản phẩm dạng lưới", 2)
-text("Movies/Index hiển thị năm phim thành thẻ gồm poster, thể loại, tên, mô tả ngắn, giá và nút Thêm vào giỏ. Phần đầu trang dùng nhận diện CINÉ NGHĨA và ghi tên sinh viên Chu Đình Nghĩa; footer ghi MSSV và họ tên.")
-figures([("5.22", "Trang chủ dạng lưới với poster, thông tin phim và nút Thêm vào giỏ.", "hinh_5_22.jpg", None)])
+text("Movies/Index hiện hiển thị sáu phim thành thẻ gồm poster, thể loại, tên, mô tả ngắn, giá và nút Thêm vào giỏ. Phần đầu trang dùng nhận diện CINÉ NGHĨA và ghi tên sinh viên Chu Đình Nghĩa; footer ghi MSSV và họ tên.")
+figures([("5.22", "Trang chủ public dạng lưới với sáu phim, gồm poster vừa upload.", "hinh_5_22_six.png", None)])
 
 h("5.5  Giỏ hàng Session", 2)
 text("CartService lưu MovieId và Quantity dạng JSON trong Session. Khi hiển thị, dịch vụ đọc lại Movie từ database rồi tính Subtotal và Total, nên giỏ chưa tạo đơn trong SQL Server. Add tăng số lượng, Update đặt lại số lượng tối đa 99, Remove bỏ phim khỏi giỏ. Bản này dùng CartService thay cho SessionExtensions và action AddToCart trong tài liệu Lab.")
@@ -271,7 +262,7 @@ figures([
     ("5.32", "Biểu mẫu Checkout đã nhập thông tin thử nghiệm.", "hinh_5_32.jpg", None),
     ("5.33", "Checkout hiển thị lỗi khi nhập email-sai không đúng định dạng.", "hinh_5_33.jpg", None),
     ("5.34", "Trang Completed xác nhận đơn hàng số 2.", "hinh_5_34.jpg", None),
-    ("5.35", "Dữ liệu Orders và OrderItems của đơn số 2 trong SQL Server.", None, None),
+    ("5.35", "T-SQL console truy vấn Orders và OrderItems của đơn số 2, thấy tổng 198.000đ và số lượng 2.", "hinh_5_35.png", None),
     ("5.36", "Email xác nhận đã nhận; chỉ bổ sung nếu gửi thành công.", None, "N/A"),
     ("5.34a", "Mã CartController lưu Order và OrderItem trước khi gửi email.", "hinh_5_34_code.jpg", None),
 ])
@@ -285,23 +276,23 @@ figures([
 ])
 
 h("6  Triển khai")
-text("Em đã chạy dotnet publish -c Release -o ./publish thành công; bản publish có web.config, DLL và wwwroot. Website đặt trên Somee tại cinenghia409.somee.com, kết nối database CineNghia409 bằng cấu hình production chỉ nằm trên hosting. Trang public hiển thị đủ năm phim và checkout thử nghiệm tạo trang Completed.")
-text("Ảnh lúc tạo website, chọn ZIP và giải nén không còn trong phiên hiện tại. Em giữ các khung cần chụp thay vì mô phỏng thao tác cũ. Ảnh website đang chạy trên hosting có thanh địa chỉ là bằng chứng triển khai đã thành công.")
+text("Em đã chạy dotnet publish -c Release -o ./publish --no-restore thành công; bản publish có web.config, DLL và wwwroot. Website đặt trên Somee tại cinenghia409.somee.com, kết nối database CineNghia409 bằng cấu hình production chỉ nằm trên hosting. Trang public hiển thị sáu phim và checkout thử nghiệm tạo trang Completed.")
+text("Ảnh lúc tạo website, chọn ZIP và giải nén không còn trong phiên hiện tại. Danh sách Websites, File manager với web.config và DLL, cùng website public là bằng chứng trạng thái triển khai hiện nay. Bản sửa upload được cập nhật bằng DLL mới trên Somee mà không ghi đè cấu hình chứa mật khẩu.")
 figures([
     ("6.1", "Terminal sau dotnet publish và thư mục publish có web.config.", None, None),
     ("6.2", "Nội dung publish được chọn và file publish.zip có web.config ở gốc.", None, None),
-    ("6.3", "Danh sách Websites trên Somee với nút CREATE.", None, None),
+    ("6.3", "Danh sách Websites trên Somee hiện có cinenghia409.somee.com; mục Create website nằm trên menu trái.", "hinh_6_3.png", None),
     ("6.4", "Form tạo website cinenghia409 trên Somee.", None, None),
     ("6.5", "File manager chọn publish.zip và Upload and Unzip archives.", None, None),
-    ("6.6", "File manager sau giải nén có web.config, wwwroot và DLL.", None, None),
+    ("6.6", "File manager trên Somee có web.config, wwwroot và các DLL của ứng dụng.", "hinh_6_6.png", None),
     ("6.7", "Website CINÉ NGHĨA chạy trên Somee với URL công khai.", "hinh_6_7.png", None),
 ])
 
 h("7  Tổ chức mã nguồn trên GitHub")
-text("Repository ecommerce-ui-improvement là repository hiện có, không tạo mới. ASP-CORE chứa README và SourceCode; README hướng dẫn công nghệ, chức năng, cấu trúc và cách chạy. appsettings.example.json chứa giá trị mẫu, còn cấu hình production có mật khẩu không được commit. Report đã có trên máy nhưng chưa xuất hiện trong ảnh GitHub hiện tại.")
+text("Repository ecommerce-ui-improvement là repository hiện có, không tạo mới. ASP-CORE chứa README, SourceCode và Report; README hướng dẫn công nghệ, chức năng, cấu trúc và cách chạy. appsettings.example.json chứa giá trị mẫu, còn cấu hình production có mật khẩu không được commit. Ảnh GitHub mới đã thể hiện thư mục Report công khai.")
 figures([
     ("7.1", "GitHub repository hiện có với thư mục ASP-CORE và README.", "hinh_7_1.jpg", None),
-    ("7.2", "Thư mục ASP-CORE trên GitHub; ảnh hiện tại chưa có Report.", "hinh_7_2.jpg", None),
+    ("7.2", "Thư mục ASP-CORE trên GitHub công khai có Report, SourceCode và README.", "hinh_7_2_new.png", None),
     ("7.3", "README của ASP-CORE hiển thị trên GitHub.", "hinh_7_3.jpg", None),
     ("7.4", "appsettings.example.json trên GitHub không chứa mật khẩu thật.", "hinh_7_4.jpg", None),
     ("7.5", "Repository truy cập công khai trong trình duyệt chưa đăng nhập GitHub.", "hinh_7_2.jpg", None),
@@ -310,45 +301,25 @@ figures([
 h("8  Khó khăn và cách xử lý")
 text("Báo cáo này chỉ ghi các vấn đề có dấu vết kiểm chứng được. Trong phiên kiểm tra mới nhất, build và publish đều thành công; không có ảnh lỗi NU1202, Invalid object name, chứng chỉ SQL hay Gmail 535. Các lỗi ví dụ trong đề không được trình bày như lỗi em đã gặp.")
 grid(["Vấn đề thực tế", "Nguyên nhân", "Cách xử lý hoặc trạng thái"], [
-    ("Không đủ ảnh thao tác lịch sử", "Một số màn hình chỉ xuất hiện khi khởi tạo hoặc khi có lỗi", "Đánh dấu khung cần chụp; không dựng ảnh giả"),
+    ("Không đủ ảnh thao tác lịch sử", "Một số màn hình chỉ xuất hiện khi khởi tạo hoặc khi có lỗi", "Lược bỏ vị trí ảnh không thể chụp lại; dùng minh chứng hiện trạng"),
     ("Chưa xác minh email Gmail", "Chưa có App Password trong cấu hình", "Không ghi đã gửi thành công; giữ chức năng chờ cấu hình"),
-    ("Somee console cần đăng nhập lại", "Phiên quản trị đã hết hạn", "Để khung ảnh bảng SQL và chụp khi đăng nhập lại"),
+    ("Poster upload bị lỗi hiển thị", "MapStaticAssets thiếu ảnh tạo lúc chạy", "Thêm UseStaticFiles, cập nhật DLL; ảnh đã hiện"),
 ])
 
 h("9  Kết luận và tự đánh giá")
-text("Website đã có cấu trúc MVC, SQL Server và migration, quản lý phim/thể loại, giỏ hàng Session, checkout lưu đơn, giao diện cá nhân hóa, repository GitHub và URL public. Bản Release build và publish thành công trong phiên kiểm tra; website public hiển thị năm phim và trang Completed của đơn số 2. Email Gmail chưa được cấu hình/kiểm chứng và các khung ảnh ở cuối cần bổ sung trước khi khẳng định hồ sơ minh chứng hoàn chỉnh.")
+text("Website đã có cấu trúc MVC, SQL Server và migration, quản lý phim/thể loại, upload poster PNG thật, giỏ hàng Session, checkout lưu đơn, giao diện cá nhân hóa, repository GitHub và URL public. Bản Release publish thành công; website public hiển thị sáu phim và trang Completed của đơn số 2. Email Gmail chưa được cấu hình/kiểm chứng. Ảnh thao tác lịch sử không có sẵn nên báo cáo chỉ dùng ảnh trạng thái và kết quả thật.")
+text("Giới hạn minh chứng: ảnh lúc tạo template, tạo database, đăng ký tài khoản và upload gói triển khai ban đầu không còn trên máy. Dự án dùng một migration InitialCreate và tên Model Order/OrderItem thay cho tên mẫu trong Lab. Các ảnh hiện trạng, dữ liệu SQL và mã nguồn được dùng để đối chiếu; không tái dựng màn hình lịch sử.")
 grid(["Rubric", "Điểm tối đa", "Tự đối chiếu"], [
-    ("Khởi tạo và cấu hình", 10, "Build đạt; thiếu ảnh terminal ban đầu"),
-    ("Cơ sở dữ liệu", 15, "Có Model/Migration; thiếu ảnh bảng SQL"),
-    ("Quản lý sản phẩm/thể loại", 15, "Có mã CRUD và giao diện; thiếu ảnh vài thao tác"),
-    ("Upload hình ảnh", 10, "Có mã xử lý; chưa có ảnh thao tác upload thật"),
-    ("Giỏ hàng", 15, "Có Add/Update/Remove và tổng; thiếu ảnh thử nhiều phim"),
-    ("Checkout", 10, "Có form và Completed; thiếu ảnh bảng đơn"),
+    ("Khởi tạo và cấu hình", 10, "Có SDK, mã cấu hình và publish; không có ảnh lúc tạo template"),
+    ("Cơ sở dữ liệu", 15, "Có Model, migration và bảng SQL thật trên Somee"),
+    ("Quản lý sản phẩm/thể loại", 15, "Có CRUD, form, validation và dữ liệu SQL thật"),
+    ("Upload hình ảnh", 10, "Có form chọn file, tệp trên hosting và poster hiển thị"),
+    ("Giỏ hàng", 15, "Có ảnh Add, Update, Remove và tổng tiền"),
+    ("Checkout", 10, "Có form, Completed và bảng Orders/OrderItems"),
     ("Giao diện và triển khai", 10, "Có giao diện desktop/điện thoại và website public"),
-    ("GitHub và README", 5, "Có mã nguồn và README; Report chưa lên GitHub"),
-    ("Báo cáo và minh chứng", 10, "Có ảnh thật và khung thiếu minh bạch; chưa đủ ảnh"),
+    ("GitHub và README", 5, "Có mã nguồn, README và Report công khai"),
+    ("Báo cáo và minh chứng", 10, "Ảnh thật; thao tác lịch sử không có ảnh được mô tả đúng thực tế"),
 ])
-
-h("Phụ lục A  Đối chiếu ảnh bắt buộc")
-grid(["Minh chứng chính theo đề", "Hình trong báo cáo", "Trạng thái"], [
-    ("Cấu trúc dự án", "2.6, 4.1", "Có ảnh GitHub; thiếu ảnh VS Code"),
-    ("Website local", "2.3", "Có ảnh trang local; thiếu terminal"),
-    ("Danh sách và form phim", "5.9, 5.22", "Có ảnh; form chưa điền đầy đủ"),
-    ("Upload và hiển thị ảnh", "5.16–5.21", "Có mã và poster; thiếu ảnh upload thật"),
-    ("Thể loại và database", "5.3, 5.4", "Có trang web; thiếu bảng SQL"),
-    ("Giỏ hàng", "5.26–5.28", "Có một phim; thiếu thử nhiều phim/Remove"),
-    ("Checkout và xác nhận", "5.32–5.35", "Có form và Completed; thiếu bảng SQL"),
-    ("Hosting và URL", "6.7", "Có ảnh thật"),
-    ("GitHub và README", "7.1–7.4", "Có ảnh thật; chưa có Report trên GitHub"),
-])
-
-h("Phụ lục B  Các khung ảnh còn cần bổ sung")
-for number, desc in missing:
-    text(f"Hình {number}: {desc}")
-h("Phụ lục C  Các hình Lab mẫu không áp dụng")
-for number, desc in not_applicable:
-    text(f"Hình {number}: {desc}")
-text("Không áp dụng nghĩa là dự án dùng cách triển khai khác; không nên chụp ảnh của project khác để lấp chỗ này. Chỉ dùng ảnh từ chính project hoặc website này. Không công khai mật khẩu SQL, Gmail App Password hay chuỗi kết nối có pwd.")
 
 footer = section.footer.paragraphs[0]
 footer.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -357,19 +328,19 @@ doc.save(OUTPUT)
 inventory = [
     "# Danh sách minh chứng của báo cáo",
     "",
-    "Chỉ sử dụng ảnh chụp nguyên bản từ chính dự án và website. Những hình không có ảnh được giữ dưới dạng khung `[CẦN CHỤP]` trong Word.",
+    "Chỉ sử dụng ảnh chụp nguyên bản từ chính dự án và website. Các thao tác lịch sử không có ảnh thật được lược bỏ trong Word.",
     "",
     f"- Vị trí đã chèn ảnh thật: {len(actual)}",
-    f"- Khung cần chụp: {len(missing)}",
+    f"- Vị trí ảnh lịch sử lược bỏ: {len(omitted)}",
     f"- Hình Lab mẫu không áp dụng cho dự án này: {len(not_applicable)}",
     "",
     "## Ảnh thật đã chèn",
     "",
 ]
 inventory += [f"- Hình {number}: `images/{filename}` — {desc}" for number, filename, desc in actual]
-inventory += ["", "## Khung cần chụp bổ sung", ""]
-inventory += [f"- Hình {number}: {desc}" for number, desc in missing]
+inventory += ["", "## Vị trí ảnh lịch sử lược bỏ", ""]
+inventory += [f"- Hình {number}: {desc}" for number, desc in omitted]
 inventory += ["", "## Hình Lab mẫu không áp dụng", ""]
 inventory += [f"- Hình {number}: {desc}" for number, desc in not_applicable]
 (ROOT / "ANH_CAN_CHUP.md").write_text("\n".join(inventory) + "\n", encoding="utf-8")
-print(f"{OUTPUT.name}: {len(actual)} ảnh thật; {len(missing)} khung cần chụp; {len(not_applicable)} hình không áp dụng")
+print(f"{OUTPUT.name}: {len(actual)} ảnh thật; 0 khung trống; {len(omitted)} vị trí lịch sử lược bỏ; {len(not_applicable)} hình không áp dụng")

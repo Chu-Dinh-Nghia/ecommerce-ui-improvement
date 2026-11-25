@@ -42,6 +42,8 @@ else
 }
 
 app.UseHttpsRedirection();
+// Runtime uploads are not part of the build-time MapStaticAssets manifest.
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
