@@ -4,6 +4,6 @@ const server = http.createServer(function (request, response) {
   response.write("Hello this is our first node.js application");
   response.end();
 });
-const port = 8080;
+const port = Number(process.env.PORT || 8080);
 server.listen(port);
 console.log("Server running at port=" + port);

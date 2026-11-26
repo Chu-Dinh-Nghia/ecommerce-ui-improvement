@@ -1,14 +1,39 @@
 let tasks = [];
+const localMode = location.protocol === 'file:';
+const storageKey = 'chu-dinh-nghia-todo-v2';
 const form = document.querySelector('#task-form');
 const input = document.querySelector('#task-input');
 const list = document.querySelector('#task-list');
 const filter = document.querySelector('#filter');
 
 async function api(path, options = {}) {
+  if (localMode) return localApi(path, options);
   const response = await fetch(path, {headers: {'Content-Type': 'application/json'}, ...options});
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || 'Yêu cầu thất bại');
   return data;
+}
+function localApi(path, options) {
+  let records;
+  try { records = JSON.parse(localStorage.getItem(storageKey) || '[]'); }
+  catch { records = []; }
+  if (!Array.isArray(records)) records = [];
+  const method = options.method || 'GET';
+  if (method === 'GET') return records;
+  const data = options.body ? JSON.parse(options.body) : {};
+  if (method === 'POST') {
+    const record = {id: crypto.randomUUID(), title: data.title, done: false};
+    records.unshift(record);
+    localStorage.setItem(storageKey, JSON.stringify(records));
+    return record;
+  }
+  const id = path.split('/').at(-1);
+  const index = records.findIndex(record => record.id === id);
+  if (index < 0) throw new Error('Không tìm thấy công việc.');
+  if (method === 'DELETE') records.splice(index, 1);
+  if (method === 'PATCH') Object.assign(records[index], data);
+  localStorage.setItem(storageKey, JSON.stringify(records));
+  return method === 'DELETE' ? {deleted: true} : records[index];
 }
 async function refresh() { tasks = await api('/api/tasks'); render(); }
 async function change(path, options) {
@@ -56,6 +81,9 @@ form.addEventListener('submit', async event => {
   catch (error) { alert(error.message); }
 });
 filter.addEventListener('change', render);
+document.querySelector('#storage-mode').textContent = localMode
+  ? 'Chế độ mở trực tiếp: dữ liệu lưu trong trình duyệt trên máy này.'
+  : 'Chế độ server: dữ liệu lưu trong SQLite.';
 refresh().catch(error => {
   document.querySelector('#empty').textContent = 'Không kết nối được server. Chạy node server.js rồi mở http://localhost:8080.';
   console.error(error);
