@@ -6,7 +6,7 @@
 - `Bai2.js`: ví dụ HTTP server ban đầu.
 - `index.html`, `app.js`, `server.js`: ứng dụng TODO hoàn chỉnh với API Node.js.
 - `todo.sqlite`: database SQLite của ứng dụng (ban đầu không có công việc).
-- `Chu_Đình_Nghĩa_bổ_sung_bài_4_điểm.docx`: báo cáo và hình minh chứng.
+- `Chu_Đình_Nghĩa.docx`: báo cáo và hình minh chứng.
 
 ## Chạy ứng dụng TODO
 
