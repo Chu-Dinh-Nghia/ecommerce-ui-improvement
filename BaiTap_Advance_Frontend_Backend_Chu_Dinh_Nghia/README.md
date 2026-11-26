@@ -11,8 +11,8 @@
 ## Chạy ứng dụng TODO
 
 1. Cài Node.js 24.
-2. Mở terminal trong thư mục này và chạy `node server.js`.
-3. Mở `http://localhost:8080` trên trình duyệt.
+2. Giải nén toàn bộ ZIP, rồi nhấp đúp `start.bat`. Giữ cửa sổ server mở khi sử dụng.
+3. Nếu chạy thủ công, mở terminal trong thư mục này và chạy `node server.js`, sau đó mở `http://localhost:8080`.
 4. Xem dữ liệu API tại `http://localhost:8080/api/tasks`.
 
-Ứng dụng cần được mở qua server. Dữ liệu được lưu trong `todo.sqlite`.
+Ứng dụng cần được mở qua server. Nếu `localhost:8080` báo từ chối kết nối, hãy chạy `start.bat` trước. Dữ liệu được lưu trong `todo.sqlite`.
