@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quản lý công việc</title>
+  <style>
+    :root { font-family: Arial, sans-serif; color: #17324d; background: #f3f7fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    h1 { margin-bottom: 5px; }
+    .intro { color: #61758a; margin-top: 0; }
+    .card { background: white; border-radius: 14px; padding: 22px; box-shadow: 0 3px 18px #17324d12; margin: 20px 0; }
+    form { display: flex; gap: 10px; }
+    input { flex: 1; min-width: 0; border: 1px solid #c9d5e1; border-radius: 8px; padding: 12px; font: inherit; }
+    button { border: 0; border-radius: 8px; padding: 11px 16px; font: inherit; cursor: pointer; }
+    .primary { background: #1769aa; color: white; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .stat { background: #eaf3fc; border-radius: 10px; padding: 16px; }
+    .stat strong { display: block; font-size: 28px; margin-top: 8px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    select { padding: 9px; border: 1px solid #c9d5e1; border-radius: 8px; }
+    ul { list-style: none; padding: 0; margin: 8px 0 0; }
+    li { display: flex; align-items: center; gap: 10px; border-top: 1px solid #e5edf4; padding: 13px 0; }
+    li input[type=checkbox] { flex: none; width: 18px; height: 18px; }
+    .task-title { flex: 1; overflow-wrap: anywhere; }
+    .done { text-decoration: line-through; color: #778b9e; }
+    .secondary { background: #eaf3fc; color: #1769aa; }
+    .danger { background: #ffeded; color: #b4232c; }
+    .empty { color: #61758a; }
+    @media (max-width: 600px) { main { margin: 20px auto; } form { flex-direction: column; } li { flex-wrap: wrap; } .stats { gap: 6px; } .stat { padding: 10px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Quản lý công việc</h1>
+    <p class="intro">Thêm, chỉnh sửa và theo dõi tiến độ công việc hằng ngày.</p>
+    <section class="card">
+      <h2>Thêm công việc</h2>
+      <form id="task-form">
+        <input id="task-input" maxlength="120" required placeholder="Ví dụ: Hoàn thành báo cáo" aria-label="Tên công việc">
+        <button class="primary" type="submit">Thêm công việc</button>
+      </form>
+    </section>
+    <section class="stats" aria-label="Thống kê">
+      <div class="stat">Tổng công việc<strong id="total">0</strong></div>
+      <div class="stat">Chưa hoàn thành<strong id="pending">0</strong></div>
+      <div class="stat">Đã hoàn thành<strong id="completed">0</strong></div>
+    </section>
+    <section class="card">
+      <div class="toolbar"><h2>Danh sách công việc</h2><label>Lọc trạng thái <select id="filter"><option value="all">Tất cả</option><option value="pending">Chưa hoàn thành</option><option value="completed">Đã hoàn thành</option></select></label></div>
+      <p id="empty" class="empty">Chưa có công việc nào.</p>
+      <ul id="task-list"></ul>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
